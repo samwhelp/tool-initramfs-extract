@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+
+
+################################################################################
+### Head: Usage
+##
+
+##
+## $ initramfs-extract
+## $ initramfs-extract initrd.img rootfs
+##
+
+##
+### Tail: Usage
+################################################################################
+
+
+################################################################################
+### Head: Link
+##
+
+# * https://unix.stackexchange.com/questions/163346/why-is-it-that-my-initrd-only-has-one-directory-namely-kernel
+# * https://www.ubuntu-tw.org/modules/newbb/viewtopic.php?post_id=362052#forumpost362052https://www.ubuntu-tw.org/modules/newbb/viewtopic.php?post_id=362052#forumpost362052
+
+##
+### Tail: Link
+################################################################################
+
+
+################################################################################
+### Head: Init
+##
+set -e ## for Exit immediately if a command exits with a non-zero status.
+THE_BASE_DIR_PATH="$(cd -- "$(dirname -- "$0")" ; pwd)"
+THE_CMD_FILE_NAME="$(basename "$0")"
+##
+### Tail: Init
+################################################################################
+
+
+################################################################################
+### Head: Util / Debug
+##
+
+util_error_echo () {
+	echo "$@" 1>&2
+}
+
+##
+### Head: Util / Debug
+################################################################################
+
+
+################################################################################
+### Head: Util / initramfs
+##
+
+util_initramfs_extract_core () {
+	if [[ $(wc -c "$1" | cut -d ' ' -f1) -eq 0 ]]; then
+		return
+	fi
+
+	local type=$(cat "$1" | file -)
+	local temp_file=$(date +%s.%N)
+	util_error_echo -e "\n$type"
+
+	if [[ "$type" =~ .*cpio.* ]]; then
+		cat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*gzip.* ]]; then
+		zcat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*XZ.* ]]; then
+		xzcat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*bzip2.* ]]; then
+		bzcat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*Zstandard.* ]]; then
+		zstdcat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*LZMA.* ]]; then
+		lzcat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*LZ4.* ]]; then
+		lz4cat "$1" | (cpio -id; cat > "$temp_file")
+	elif [[ "$type" =~ .*lzop.* ]]; then
+		util_error_echo "TODO"
+		return
+	else
+		return
+	fi
+
+	util_initramfs_extract_core $temp_file
+	rm $temp_file
+}
+
+
+util_initramfs_extract () {
+
+	local initrd_file_path="$(makesure_initrd_file_path "$1")"
+	local rootfs_dir_path="$(makesure_rootfs_dir_path "$2")"
+
+
+	if ! [ -a "$initrd_file_path" ]; then
+		util_error_echo
+		util_error_echo "##"
+		util_error_echo "## File Not Exist: $initrd_file_path"
+		util_error_echo "##"
+		util_error_echo
+		return
+	fi
+
+	mkdir -p "$rootfs_dir_path"
+
+	util_error_echo
+	util_error_echo "##"
+	util_error_echo "## cd $rootfs_dir_path"
+	util_error_echo "##"
+	util_error_echo
+	cd "$rootfs_dir_path"
+
+
+	util_error_echo
+	util_error_echo "##"
+	util_error_echo "## start extract"
+	util_error_echo "##"
+	util_error_echo
+	util_initramfs_extract_core "$initrd_file_path"
+
+	##
+	## $ man cd
+	##
+	util_error_echo
+	util_error_echo "##"
+	util_error_echo "## cd $OLDPWD"
+	util_error_echo "##"
+	util_error_echo
+	cd "$OLDPWD"
+}
+
+makesure_initrd_file_path () {
+	local initrd_file_path="$1"
+
+	if [ -z "$initrd_file_path" ]; then
+		initrd_file_path='initrd.img'
+		#util_error_echo "Use default initrd_file_path: $initrd_file_path"
+	fi
+
+	initrd_file_path="$(realpath "$initrd_file_path")"
+
+	echo "$initrd_file_path"
+}
+
+makesure_rootfs_dir_path () {
+	local rootfs_dir_path="$1"
+
+	if [ -z "$rootfs_dir_path" ]; then
+		rootfs_dir_path='rootfs'
+		#util_error_echo "Use default rootfs_dir_name: $rootfs_dir_path"
+	fi
+
+	rootfs_dir_path="$(realpath "$rootfs_dir_path")"
+
+	echo "$rootfs_dir_path"
+}
+
+##
+### Tail: Util / initramfs
+################################################################################
+
+
+
+################################################################################
+### Head: Main
+##
+
+__main__ () {
+
+	util_initramfs_extract "$1" "$2"
+
+}
+
+
+__main__ "$@"
+
+##
+### Tail: Main
+################################################################################

@@ -1,0 +1,15 @@
+Source: initramfs-extract
+Section: utils
+Priority: optional
+Maintainer: samwhelp <samwhelp@users.noreply.github.com>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 3.9.5
+Homepage: https://samwhelp.github.io/tool-initramfs-extract/
+Vcs-Git: https://github.com/samwhelp/tool-initramfs-extract.git
+Vcs-Browser: https://github.com/samwhelp/tool-initramfs-extract
+
+Package: initramfs-extract
+Architecture: all
+Depends: ${misc:Depends}, zstd
+Description: initramfs helper
+ This is initramfs helper for extract initrd.
