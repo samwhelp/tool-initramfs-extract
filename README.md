@@ -3,6 +3,7 @@
 # tool-initramfs-extract
 
 * [tool-initramfs-extract](https://samwhelp.github.io/tool-initramfs-extract/) ([GitHub](https://github.com/samwhelp/tool-initramfs-extract))
+* [initramfs-extract](https://github.com/samwhelp/tool-initramfs-extract/blob/main/src/asset/bin/initramfs-extract)
 
 
 ## Subject
