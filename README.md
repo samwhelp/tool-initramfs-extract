@@ -25,7 +25,7 @@ show
 # COMPRESS: [ gzip | bzip2 | lz4 | lzma | lzop | xz | zstd ]
 ```
 
-install (d)compress utils
+install (de)compress utils
 
 
 ``` sh
