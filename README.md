@@ -30,7 +30,7 @@ install (de)compress utils
 
 
 ``` sh
-sudo apt-get install gzip bzip2 xz-utils zstd lz4 lzop
+sudo apt-get install cpio gzip bzip2 xz-utils zstd lz4 lzop
 ```
 
 
