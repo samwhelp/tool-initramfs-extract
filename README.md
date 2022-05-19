@@ -3,6 +3,15 @@
 # tool-initramfs-extract
 
 * [tool-initramfs-extract](https://samwhelp.github.io/tool-initramfs-extract/) ([GitHub](https://github.com/samwhelp/tool-initramfs-extract))
+* [initramfs-extract](https://github.com/samwhelp/tool-initramfs-extract/blob/main/src/asset/bin/initramfs-extract)
+
+
+## Subject
+
+* [Prepare](#prepare)
+* [Manual Install](#manual-install)
+* [Usage](#usage)
+* [Link](#link)
 
 
 ## Prepare
@@ -17,7 +26,7 @@ show
 # COMPRESS: [ gzip | bzip2 | lz4 | lzma | lzop | xz | zstd ]
 ```
 
-install (d)compress utils
+install (de)compress utils
 
 
 ``` sh
