@@ -46,7 +46,9 @@ download [initramfs-extract](https://raw.githubusercontent.com/samwhelp/tool-ini
 
 ``` sh
 curl -fLo ~/.local/bin/initramfs-extract --create-dirs https://raw.githubusercontent.com/samwhelp/tool-initramfs-extract/main/src/asset/bin/initramfs-extract
+
 chmod 755 ~/.local/bin/initramfs-extract
+
 ```
 
 
